@@ -1,0 +1,83 @@
+Checks: '*,
+         -altera-id-dependent-backward-branch,
+         -altera-struct-pack-align,
+         -altera-unroll-loops,
+         -android-cloexec-fopen,
+         -bugprone-easily-swappable-parameters,
+         -concurrency-mt-unsafe,
+         -cppcoreguidelines-avoid-goto,
+         -cppcoreguidelines-avoid-magic-numbers,
+         -cppcoreguidelines-avoid-non-const-global-variables,
+         -cppcoreguidelines-macro-usage,
+         -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+         -cppcoreguidelines-pro-bounds-constant-array-index,
+         -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+         -cppcoreguidelines-pro-type-reinterpret-cast,
+         -cppcoreguidelines-pro-type-union-access,
+         -cppcoreguidelines-virtual-class-destructor,
+         -fuchsia-default-arguments-calls,
+         -fuchsia-default-arguments-declarations,
+         -fuchsia-overloaded-operator,
+         -google-explicit-constructor,
+         -google-readability-function-size,
+         -google-runtime-int,
+         -google-runtime-references,
+         -hicpp-avoid-goto,
+         -hicpp-explicit-conversions,
+         -hicpp-function-size,
+         -hicpp-no-array-decay,
+         -hicpp-no-assembler,
+         -hicpp-signed-bitwise,
+         -hicpp-uppercase-literal-suffix,
+         -llvm-header-guard,
+         -llvm-include-order,
+         -llvmlibc-*,
+         -misc-no-recursion,
+         -misc-non-private-member-variables-in-classes,
+         -modernize-use-trailing-return-type,
+         -readability-function-size,
+         -readability-function-cognitive-complexity,
+         -readability-identifier-length,
+         -readability-magic-numbers,
+         -readability-redundant-access-specifiers,
+         -readability-uppercase-literal-suffix,
+         -cert-dcl16-c, 
+         -google-readability-namespace-comments,
+         -llvm-namespace-comment,
+         -modernize-use-nodiscard,
+         -fuchsia-statically-constructed-objects,
+         -cert-err58-cpp,
+         -cppcoreguidelines-non-private-member-variables-in-classes,
+         -cppcoreguidelines-owning-memory,
+         -cppcoreguidelines-avoid-c-arrays,
+         -hicpp-avoid-c-arrays,
+         -modernize-avoid-c-arrays,
+         -cppcoreguidelines-special-member-functions,
+         -hicpp-special-member-functions,
+         -fuchsia-trailing-return,
+         -abseil-string-find-str-contains,
+         -cppcoreguidelines-pro-type-vararg,
+         -hicpp-vararg,
+         -cert-dcl37-c,
+         -cert-dcl51-cpp,
+         -hicpp-invalid-access-moved,
+         -bugprone-macro-parentheses,
+         -google-upgrade-googletest-case,
+         -hicpp-use-equals-default,
+         -modernize-use-equals-default
+         ' 
+
+# cert-dcl16-c same as readability-uppercase-literal-suffix
+# cert-dcl37-c same as bugprone-exception-escape
+# cert-dcl51-cpp same as bugprone-exception-escape
+# hicpp-invalid-access-moved same as bugprone-use-after-move
+
+CheckOptions:
+  - key: hicpp-special-member-functions.AllowSoleDefaultDtor
+    value: 1
+  - key: readability-qualified-auto.AddConstToQualified
+    value: false
+
+WarningsAsErrors: '*'
+
+HeaderFilterRegex: '.*(h|hpp|hxx)$'

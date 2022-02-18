@@ -1,0 +1,6 @@
+add_subdirectory(Common)
+add_subdirectory(StdUtil)
+add_subdirectory(String)
+add_subdirectory(Terminal)
+add_subdirectory(Time)
+add_subdirectory(Type)
