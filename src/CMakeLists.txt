@@ -5,7 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #   caused by /Zc:preprocessor will expose windows header inconform to standard.
 # C4251: 'type' : class 'type1' needs to have dll-interface to be used by clients of class 'type2'
 #   workaround for windows dll problem currently.
-set(COMMON_MSVC_FLAGS "/permissive-;/W4;/WX;/Zi;/Zc:__cplusplus;/Zc:preprocessor;/wd5105;/DFMT_HEADER_ONLY")
+set(COMMON_MSVC_FLAGS "/permissive-;/W4;/WX;/Zi;/Zc:__cplusplus;/Zc:preprocessor;/wd5105;/DFMT_HEADER_ONLY;/utf-8")
 set(COMMON_GCC_FLAGS "-pedantic;-Wall;-Wextra;-Werror;-g;-fPIC;-DFMT_HEADER_ONLY")
 
 if (MSVC)
@@ -27,21 +27,27 @@ if (WIN32)
     endif()
 endif()
 
-find_package(GTest REQUIRED)
+find_package(GTest CONFIG REQUIRED)
 
-# Header only libraries
-file(TO_CMAKE_PATH $ENV{FMT_ROOT}/include FMT_INCLUDE_DIRS)
-if(EXISTS ${FMT_INCLUDE_DIRS}/fmt/format.h)
-   message(STATUS "Found FMT: " ${FMT_INCLUDE_DIRS})
-else()
-   message(FATAL_ERROR "Not found FMT in " ${FMT_INCLUDE_DIRS})
+if (MINGW)
+    # Header only libraries
+    file(TO_CMAKE_PATH $ENV{FMT_ROOT}/include FMT_INCLUDE_DIRS)
+    if(EXISTS ${FMT_INCLUDE_DIRS}/fmt/format.h)
+       message(STATUS "Found FMT: " ${FMT_INCLUDE_DIRS})
+    else()
+       message(FATAL_ERROR "Not found FMT in " ${FMT_INCLUDE_DIRS})
+    endif()
+
+    file(TO_CMAKE_PATH $ENV{JSON_ROOT}/include JSON_INCLUDE_DIRS)
+    if(EXISTS ${JSON_INCLUDE_DIRS}/nlohmann/json.hpp)
+       message(STATUS "Found Nlohmann Json: " ${JSON_INCLUDE_DIRS})
+    else()
+       message(FATAL_ERROR "Not found Nlohmann Json in " ${JSON_INCLUDE_DIRS})
+    endif()
 endif()
-
-file(TO_CMAKE_PATH $ENV{JSON_ROOT}/include JSON_INCLUDE_DIRS)
-if(EXISTS ${JSON_INCLUDE_DIRS}/nlohmann/json.hpp)
-   message(STATUS "Found Nlohmann Json: " ${JSON_INCLUDE_DIRS})
-else()
-   message(FATAL_ERROR "Not found Nlohmann Json in " ${JSON_INCLUDE_DIRS})
+if (MSVC)
+    find_package(fmt CONFIG REQUIRED)
+    find_package(nlohmann_json CONFIG REQUIRED)
 endif()
 
 set_property(GLOBAL PROPERTY PROP_HEADERS)
@@ -61,7 +67,9 @@ if (NOT MSVC)
     set_target_properties(ies PROPERTIES COMPILE_FLAGS "-m64" LINK_FLAGS "-m64")
 endif()
 set_target_properties(ies PROPERTIES CXX_VISIBILITY_PRESET hidden)
-target_include_directories(ies SYSTEM PUBLIC ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+if (MINGW)
+    target_include_directories(ies SYSTEM PRIVATE ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+endif()
 target_include_directories(ies PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_BINARY_DIR}/exports>"
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
@@ -80,6 +88,9 @@ else()
         $<$<CONFIG:RELEASE>:-O2>
     )
 endif()
+if (MSVC)
+    target_link_libraries(ies PRIVATE fmt::fmt-header-only nlohmann_json::nlohmann_json)
+endif()
 
 find_package(benchmark QUIET)
 if (benchmark_FOUND)
@@ -92,13 +103,24 @@ endif()
 add_executable(performance app/performance.cpp)
 set_target_properties(performance PROPERTIES CXX_STANDARD 17)
 target_compile_options(performance PUBLIC ${COMMON_FLAGS})
-target_link_libraries(performance ies)
+if (MINGW)
+    target_include_directories(performance SYSTEM PRIVATE ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+    target_link_libraries(performance PRIVATE ies)
+endif()
+if (MSVC)
+    target_link_libraries(performance PRIVATE ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
+endif()
 
 add_executable(test-all app/test-all.cpp ${TEST_SOURCES})
-target_include_directories(test-all PUBLIC ${FMT_INCLUDE_DIRS})
 set_target_properties(test-all PROPERTIES CXX_STANDARD 17)
 target_compile_options(test-all PUBLIC ${COMMON_FLAGS})
-target_link_libraries(test-all GTest::gtest ies)
+if (MINGW)
+    target_include_directories(test-all SYSTEM PRIVATE ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+    target_link_libraries(test-all PRIVATE GTest::gtest ies)
+endif()
+if (MSVC)
+    target_link_libraries(test-all PRIVATE GTest::gtest ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
+endif()
 
 set(CPP11ONLY_TEST_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentArrayRangeTest.cpp
