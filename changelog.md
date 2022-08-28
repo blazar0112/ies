@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- Ongoing [2022-08-29]:
+    - Update CMake using gtest and benchmark to optional to ease git clone and simply build flow.
+
 - v3.0.0 [2022-02-18]:
     - Rebrand `icl_s2` to `ies`.
 
