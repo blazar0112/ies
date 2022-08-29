@@ -1,7 +1,10 @@
 # Changelog of IES
 
-- Ongoing [2022-08-29]:
+- v3.1.0 [2022-08-30]:
+    - Add ToIndex for SmartEnum.
+    - Add ScopeTimePrinter.
     - Update CMake using gtest and benchmark to optional to ease git clone and simply build flow.
+    - Fix MSVC flow.
 
 - v3.0.0 [2022-02-18]:
     - Rebrand `icl_s2` to `ies`.
