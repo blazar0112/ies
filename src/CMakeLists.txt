@@ -134,8 +134,9 @@ if (GTest_FOUND)
     if (NOT MSVC)
         # Note: MSVC doesn't have /std:c++11, so only test in gcc/mingw.
         add_executable(test-cpp11only app/test-cpp11only.cpp ${CPP11ONLY_TEST_SOURCES})
+        set_target_properties(test-cpp11only PROPERTIES CXX_STANDARD 11)
         target_include_directories(test-cpp11only PUBLIC ${FMT_INCLUDE_DIRS})
-        target_compile_options(test-cpp11only PUBLIC -std=c++11 ${COMMON_GCC_FLAGS})
+        target_compile_options(test-cpp11only PUBLIC ${COMMON_GCC_FLAGS})
         target_link_libraries(test-cpp11only GTest::gtest ies)
     endif()
 
