@@ -61,4 +61,9 @@ TEST(SmartEnum, Has)
     ASSERT_FALSE(MyEnumSmartEnum::Has("D"));
 }
 
+TEST(SmartEnum, ToIndex)
+{
+    ASSERT_EQ(1u, ToIndex(MyEnum::B));
+}
+
 }
