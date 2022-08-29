@@ -24,6 +24,7 @@
 #include "ies/String/SplitStringView.hpp"
 
 #include "ies/Terminal/Color.hpp"
+#include "ies/Time/ScopeTimePrinter.hxx"
 #include "ies/Time/Timer.hpp"
 #include "ies/Time/TimeUtilFormat.hxx"
 
@@ -42,6 +43,8 @@ main(int argc, char* argv[])
 
     try
     {
+        ies::Time::ScopeTimePrinter<std::chrono::milliseconds> performanceTime("performance");
+
         std::cout << Color::LightGreen
                   << "IES v"
                   << IES_VERSION_MAJOR

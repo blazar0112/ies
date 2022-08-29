@@ -14,23 +14,8 @@ else()
     set(COMMON_FLAGS ${COMMON_GCC_FLAGS})
 endif()
 
-if (UNIX)
-    # UNIX use following env vars set by script outside.
-    # gtest: GTEST_ROOT
-endif()
-if (WIN32)
-    if (MSVC)
-        unset(ENV{GTEST_ROOT})
-    endif()
-    if (MINGW)
-        set(ENV{GTEST_ROOT} $ENV{INSTALL_ROOT}/gtest/1.10.0/mingw64-10.2.0)
-    endif()
-endif()
-
-find_package(GTest CONFIG REQUIRED)
-
 if (MINGW)
-    # Header only libraries
+    # use as header only libraries
     file(TO_CMAKE_PATH $ENV{FMT_ROOT}/include FMT_INCLUDE_DIRS)
     if(EXISTS ${FMT_INCLUDE_DIRS}/fmt/format.h)
        message(STATUS "Found FMT: " ${FMT_INCLUDE_DIRS})
@@ -46,6 +31,7 @@ if (MINGW)
     endif()
 endif()
 if (MSVC)
+    # using vcpkg
     find_package(fmt CONFIG REQUIRED)
     find_package(nlohmann_json CONFIG REQUIRED)
 endif()
@@ -92,14 +78,6 @@ if (MSVC)
     target_link_libraries(ies PRIVATE fmt::fmt-header-only nlohmann_json::nlohmann_json)
 endif()
 
-find_package(benchmark QUIET)
-if (benchmark_FOUND)
-    add_executable(benchmark app/benchmark.cpp)
-    set_target_properties(benchmark PROPERTIES CXX_STANDARD 17)
-    target_compile_options(benchmark PUBLIC ${COMMON_FLAGS})
-    target_link_libraries(benchmark ies benchmark::benchmark)
-endif()
-
 add_executable(performance app/performance.cpp)
 set_target_properties(performance PROPERTIES CXX_STANDARD 17)
 target_compile_options(performance PUBLIC ${COMMON_FLAGS})
@@ -111,37 +89,77 @@ if (MSVC)
     target_link_libraries(performance PRIVATE ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
 endif()
 
-add_executable(test-all app/test-all.cpp ${TEST_SOURCES})
-set_target_properties(test-all PROPERTIES CXX_STANDARD 17)
-target_compile_options(test-all PUBLIC ${COMMON_FLAGS})
-if (MINGW)
-    target_include_directories(test-all SYSTEM PRIVATE ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
-    target_link_libraries(test-all PRIVATE GTest::gtest ies)
-endif()
-if (MSVC)
-    target_link_libraries(test-all PRIVATE GTest::gtest ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
+# UNIX/MINGW use following env vars set by script outside.
+# gtest: GTEST_ROOT
+if (WIN32)
+    if (MSVC)
+        # use vcpkg instead
+        unset(ENV{GTEST_ROOT})
+    endif()
 endif()
 
-set(CPP11ONLY_TEST_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentArrayRangeTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentVectorRangeTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/EndianTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/IntegralRangeTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/IntegralRangeListTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/SmartEnumTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/EraseIfTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/FormatStringTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/IsInTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/ReverseEqualRangeTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/ies/String/SplitStringTest.cpp
-)
+find_package(GTest CONFIG)
+if (GTest_FOUND)
+    message(STATUS "Found Google Test config: " ${GTest_DIR})
 
-if (NOT MSVC)
-    # Note: MSVC doesn't have /std:c++11, so only test in gcc/mingw.
-    add_executable(test-cpp11only app/test-cpp11only.cpp ${CPP11ONLY_TEST_SOURCES})
-    target_include_directories(test-cpp11only PUBLIC ${FMT_INCLUDE_DIRS})
-    target_compile_options(test-cpp11only PUBLIC -std=c++11 ${COMMON_GCC_FLAGS})
-    target_link_libraries(test-cpp11only GTest::gtest ies)
+    enable_testing()
+
+    add_executable(test-all app/test-all.cpp ${TEST_SOURCES})
+    set_target_properties(test-all PROPERTIES CXX_STANDARD 17)
+    target_compile_options(test-all PUBLIC ${COMMON_FLAGS})
+    if (MINGW)
+        target_include_directories(test-all SYSTEM PRIVATE ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+        target_link_libraries(test-all PRIVATE GTest::gtest ies)
+    endif()
+    if (MSVC)
+        target_link_libraries(test-all PRIVATE GTest::gtest ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
+    endif()
+
+    add_test(test-all test-all)
+
+    set(CPP11ONLY_TEST_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentArrayRangeTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentVectorRangeTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/EndianTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/IntegralRangeTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/IntegralRangeListTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/SmartEnumTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/EraseIfTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/FormatStringTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/IsInTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/ReverseEqualRangeTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/String/SplitStringTest.cpp
+    )
+
+    if (NOT MSVC)
+        # Note: MSVC doesn't have /std:c++11, so only test in gcc/mingw.
+        add_executable(test-cpp11only app/test-cpp11only.cpp ${CPP11ONLY_TEST_SOURCES})
+        set_target_properties(test-cpp11only PROPERTIES CXX_STANDARD 11)
+        target_include_directories(test-cpp11only PUBLIC ${FMT_INCLUDE_DIRS})
+        target_compile_options(test-cpp11only PUBLIC ${COMMON_GCC_FLAGS})
+        target_link_libraries(test-cpp11only GTest::gtest ies)
+    endif()
+
+    add_test(test-cpp11only test-cpp11only)
+else()
+    message(STATUS "Not found Google Test, skip build test.")
+endif()
+
+find_package(benchmark CONFIG)
+if (benchmark_FOUND)
+    message(STATUS "Found Google Benchmark config: " ${benchmark_DIR})
+    add_executable(benchmark app/benchmark.cpp)
+    set_target_properties(benchmark PROPERTIES CXX_STANDARD 17)
+    target_compile_options(benchmark PUBLIC ${COMMON_FLAGS})
+    if (MINGW)
+        target_include_directories(benchmark SYSTEM PRIVATE ${FMT_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+        target_link_libraries(benchmark PRIVATE benchmark::benchmark ies)
+    endif()
+    if (MSVC)
+        target_link_libraries(benchmark PRIVATE benchmark::benchmark ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
+    endif()
+else()
+    message(STATUS "Not found Google Benchmark, skip build benchmark.")
 endif()
 
 set(MINGW_LIBRARY_NAMES gcc_s_seh-1 stdc++-6 winpthread-1)
@@ -209,5 +227,3 @@ foreach(file ${PUBLIC_HEADERS})
     get_filename_component(dir ${header} DIRECTORY)
     install(FILES ${file} DESTINATION ${dir})
 endforeach()
-
-add_test(test test-all)

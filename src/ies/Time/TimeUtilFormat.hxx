@@ -14,8 +14,7 @@
 //!     DoSomething();
 //!     s2Time::PrintNs(begin);
 //!     s2Time::PrintNs(begin, s2Time::Now(), "DoSomething");
-// NOLINTNEXTLINE(modernize-concat-nested-namespaces)
-namespace ies { namespace Time {
+namespace ies::Time {
 
 enum class UnitNameType
 {
@@ -94,4 +93,4 @@ Print(NsCountType nsCount, const std::string &durationName="")
     std::cout << prefix << "Time: " << Format<Duration, UnitName>(nsCount) << "\n";
 }
 
-}}
+}

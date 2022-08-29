@@ -131,6 +131,7 @@ private:
             return result; \
         } \
     }; \
+    inline std::size_t ToIndex(EnumName enumerator) { return static_cast<std::size_t>(enumerator); } \
     inline std::string ToString(EnumName enumerator) { return SmartEnum<EnumName>::ToString(enumerator); } \
     inline EnumName To##EnumName(const std::string &enumerator) \
     { \
