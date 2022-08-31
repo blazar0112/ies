@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v3.1.1 [2022-09-01]:
+    - Fix CMake test-all and MinGW incorrect command after previous reorganization.
+
 - v3.1.0 [2022-08-30]:
     - Add ToIndex for SmartEnum.
     - Add ScopeTimePrinter.
