@@ -89,6 +89,16 @@ if (MSVC)
     target_link_libraries(performance PRIVATE ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
 endif()
 
+set(MINGW_LIBRARY_NAMES gcc_s_seh-1 stdc++-6 winpthread-1)
+set(MINGW_LIBRARIES)
+foreach (LIB ${MINGW_LIBRARY_NAMES})
+    set(MINGW_LIB_PATH $ENV{MINGW64_ROOT}/bin/lib${LIB}.dll)
+    if (EXISTS ${MINGW_LIB_PATH} AND NOT IS_DIRECTORY ${MINGW_LIB_PATH})
+        file(TO_CMAKE_PATH ${MINGW_LIB_PATH} FOUND_MINGW_LIB)
+        list(APPEND MINGW_LIBRARIES ${FOUND_MINGW_LIB})
+    endif()
+endforeach()
+
 # UNIX/MINGW use following env vars set by script outside.
 # gtest: GTEST_ROOT
 if (WIN32)
@@ -141,6 +151,14 @@ if (GTest_FOUND)
     endif()
 
     add_test(test-cpp11only test-cpp11only)
+
+    if (MINGW)
+        add_custom_command(TARGET test-all POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${MINGW_LIBRARIES} $<TARGET_FILE:GTest::gtest>
+            $<TARGET_FILE_DIR:test-all>
+        )
+    endif()
 else()
     message(STATUS "Not found Google Test, skip build test.")
 endif()
@@ -160,24 +178,6 @@ if (benchmark_FOUND)
     endif()
 else()
     message(STATUS "Not found Google Benchmark, skip build benchmark.")
-endif()
-
-set(MINGW_LIBRARY_NAMES gcc_s_seh-1 stdc++-6 winpthread-1)
-set(MINGW_LIBRARIES)
-foreach (LIB ${MINGW_LIBRARY_NAMES})
-    set(MINGW_LIB_PATH $ENV{MINGW64_ROOT}/bin/lib${LIB}.dll)
-    if (EXISTS ${MINGW_LIB_PATH} AND NOT IS_DIRECTORY ${MINGW_LIB_PATH})
-        file(TO_CMAKE_PATH ${MINGW_LIB_PATH} FOUND_MINGW_LIB)
-        list(APPEND MINGW_LIBRARIES ${FOUND_MINGW_LIB})
-    endif()
-endforeach()
-
-if (MINGW)
-    add_custom_command(TARGET test-all POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${MINGW_LIBRARIES} ${GTEST_LIBRARY}
-        $<TARGET_FILE_DIR:test-all>
-    )
 endif()
 
 # Install
