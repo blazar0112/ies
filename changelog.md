@@ -1,5 +1,10 @@
 # Changelog of IES
 
+- v3.2.0 [2022-09-02]:
+    - Update CMake, now all dependency use installed config mode.
+        - List fmt and nlohmann_json requirement explicitly.
+    - Update README for build instructions.
+    
 - v3.1.1 [2022-09-01]:
     - Fix CMake test-all and MinGW incorrect command after previous reorganization.
 
