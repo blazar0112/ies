@@ -1,5 +1,9 @@
 # Changelog of IES
 
+- v3.2.1 [2022-09-05]:
+    - Fix IsDuration headers not add to public headers.
+    - Remove -DFMT_HEADER_ONLY from flags since fmt now use config mode fmt::fmt-header-only.
+
 - v3.2.0 [2022-09-02]:
     - Update CMake, now all dependency use installed config mode.
         - List fmt and nlohmann_json requirement explicitly.

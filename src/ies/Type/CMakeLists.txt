@@ -18,6 +18,8 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/HasStdToString.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IsAssociativeContainer.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IsAssociativeContainerV.hxx
+    ${CMAKE_CURRENT_SOURCE_DIR}/IsDuration.hxx
+    ${CMAKE_CURRENT_SOURCE_DIR}/IsDurationV.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IsJson.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IsJsonV.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IsMap.hxx
