@@ -5,8 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #   caused by /Zc:preprocessor will expose windows header inconform to standard.
 # C4251: 'type' : class 'type1' needs to have dll-interface to be used by clients of class 'type2'
 #   workaround for windows dll problem currently.
-set(COMMON_MSVC_FLAGS "/permissive-;/W4;/WX;/Zi;/Zc:__cplusplus;/Zc:preprocessor;/wd5105;/DFMT_HEADER_ONLY;/utf-8")
-#set(COMMON_GCC_FLAGS "-pedantic;-Wall;-Wextra;-Werror;-g;-fPIC;-DFMT_HEADER_ONLY")
+set(COMMON_MSVC_FLAGS "/permissive-;/W4;/WX;/Zi;/Zc:__cplusplus;/Zc:preprocessor;/wd5105;/utf-8")
 set(COMMON_GCC_FLAGS "-pedantic;-Wall;-Wextra;-Werror;-g;-fPIC")
 
 if (MSVC)
