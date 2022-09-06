@@ -21,7 +21,7 @@ if (WIN32)
         # use vcpkg instead
         unset(ENV{fmt_DIR})
         unset(ENV{nlohmann_json_DIR})
-        unset(ENV{GTEST_ROOT})
+        unset(ENV{GTest_DIR})
         unset(ENV{benchmark_DIR})
     endif()
 endif()

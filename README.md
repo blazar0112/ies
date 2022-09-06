@@ -22,7 +22,7 @@
     | - | - | - | - |
     | [fmt](https://github.com/fmtlib/fmt) | Required | `$ENV{fmt_DIR}` | `find_package(fmt CONFIG REQUIRED)` |
     | [nlohmann_json](https://github.com/nlohmann/json) | Required | `$ENV{nlohmann_json_DIR}` | `find_package(nlohmann_json CONFIG REQUIRED)` |
-    | [Google Test](https://github.com/google/googletest) | Optional | `$ENV{GTEST_ROOT}` | `find_package(GTest CONFIG)` |
+    | [Google Test](https://github.com/google/googletest) | Optional | `$ENV{GTest_DIR}` | `find_package(GTest CONFIG)` |
     | [Google Benchmark](https://github.com/google/benchmark) | Optional | `$ENV{benchmark_DIR}` | `find_package(benchmark CONFIG)` |
 
 ### Install Dependency

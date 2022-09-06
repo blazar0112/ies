@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v3.2.2 [2022-09-06]:
+    - Update CMake GTest usage.
+
 - v3.2.1 [2022-09-05]:
     - Fix IsDuration headers not add to public headers.
     - Remove -DFMT_HEADER_ONLY from flags since fmt now use config mode fmt::fmt-header-only.
