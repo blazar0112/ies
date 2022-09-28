@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v3.3.0 [2022-9-28]:
+    - Find() now support std::string_view.
+
 - v3.2.2 [2022-09-06]:
     - Update CMake GTest usage.
 
