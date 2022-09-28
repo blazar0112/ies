@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <type_traits>
 
 #include "ies/Type/IsAssociativeContainerV.hxx"
@@ -33,7 +34,7 @@ namespace ies
 
 //! @brief [Generic non-const Container] Simplify usage of associative_container::find(value) [O(lgn)] / std::find(container) [0(n)]
 //! return std::optional of iterator/const_iterator.
-//! @note for associative_container(i.e. std::set, std::map), value_type = key_type, and key in associative_container cannot be changed.
+//! @note For associative_container(i.e. std::set, std::map), value_type = key_type, and key in associative_container cannot be changed.
 //! even if returned iterator is non-const, it's same restriction as std::set::find().
 //! @note Can use for nlohmann::json.
 //! However, if json is array, then need convert to standard container for non-string value.
@@ -45,7 +46,8 @@ namespace ies
 //!     Find(array, 1);
 template <typename Container,
           typename Value,
-          std::enable_if_t<!std::is_same_v<std::remove_cv_t<Container>, std::string>, int> = 0>
+          std::enable_if_t<!std::is_same_v<std::remove_cv_t<Container>, std::string>
+                           &&!std::is_same_v<std::remove_cv_t<Container>, std::string_view>, int> = 0>
 auto
 Find(Container &container, const Value &value)
 -> std::optional<decltype(std::begin(container))>
@@ -96,7 +98,8 @@ Find(Container &container, const Value &value)
 //! return std::optional of iterator/const_iterator.
 template <typename Container,
           typename Value,
-          std::enable_if_t<!std::is_same_v<std::remove_cv_t<Container>, std::string>, int> = 0>
+          std::enable_if_t<!std::is_same_v<std::remove_cv_t<Container>, std::string>
+                           &&!std::is_same_v<std::remove_cv_t<Container>, std::string_view>, int> = 0>
 auto
 Find(const Container &container, const Value &value)
 -> std::optional<decltype(std::begin(container))>
@@ -162,6 +165,32 @@ std::optional<std::size_t>
 Find(const std::string &s, char c)
 {
     if (auto pos = s.find(c); pos!=std::string::npos)
+    {
+        return {pos};
+    }
+    return std::nullopt;
+}
+
+//! @brief [StringView] Simplify usage of std::string_view::find(substr) [O(n)], return std::optional of std:size_t (pos).
+//! @note If substr is empty, always return pos=0.
+inline
+std::optional<std::size_t>
+Find(std::string_view s, std::string_view substr)
+{
+    if (auto pos = s.find(substr); pos!=std::string_view::npos)
+    {
+        return {pos};
+    }
+    return std::nullopt;
+}
+
+//! @brief [StringView] Simplify usage of std::string_view::find(char) [O(n)], return std::optional of std:size_t (pos).
+//! @note Need this specialization to support search '\0' without much trouble.
+inline
+std::optional<std::size_t>
+Find(std::string_view s, char c)
+{
+    if (auto pos = s.find(c); pos!=std::string_view::npos)
     {
         return {pos};
     }

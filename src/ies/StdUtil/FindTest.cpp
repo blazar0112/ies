@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "nlohmann/json.hpp"
@@ -214,6 +215,16 @@ TEST(Find, Temporary)
     auto findC = Find(std::list<std::string>{"abc", "b", "d", "c", "b", "c", "e"}, "c");
 
     ASSERT_TRUE(findC);
+}
+
+TEST(Find, StringView)
+{
+    std::string text = "abcdefg";
+    std::string_view textView{text};
+
+    EXPECT_FALSE(Find(textView, "h").has_value());
+    EXPECT_EQ(0u, Find(textView, "a"));
+    ASSERT_EQ(1u, Find(textView, 'b'));
 }
 
 }
