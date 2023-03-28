@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ies/StdUtil/RequireCpp11Only.hpp"
+#include "ies/StdUtil/RequireCpp11Only.hpp" // IWYU pragma: keep
 
 #include <memory>
 #include <utility>

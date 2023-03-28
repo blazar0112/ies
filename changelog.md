@@ -1,6 +1,12 @@
 # Changelog of IES
 
-- v3.3.0 [2022-9-28]:
+- v4.1.0 [2023-03-29]:
+    - Fix IWYU and clang tidy warning in headers.
+    
+- v4.0.0 [2022-11-13]:
+    - Update license to MIT-0 license.
+
+- v3.3.0 [2022-09-28]:
     - Find() now support std::string_view.
 
 - v3.2.2 [2022-09-06]:

@@ -1,5 +1,4 @@
 #include "ies/StdUtil/EnumUtil.hxx"
-#include "ies/StdUtil/RequireCpp17.hpp"
 
 #include "gtest/gtest.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 //! [C++11 Compatible]
-#include "ies/StdUtil/RequireCpp11.hpp"
+#include "ies/StdUtil/RequireCpp11.hpp" // IWYU pragma: keep
 
 //! @brief Macro to reduce boilerplate in class definition.
 //! Usage:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ies/StdUtil/RequireCpp17.hpp"
+#include "ies/StdUtil/RequireCpp17.hpp" // IWYU pragma: keep
 
 #include <memory>
 #include <string>

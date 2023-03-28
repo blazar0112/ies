@@ -1,6 +1,6 @@
 #pragma once
 //! [C++11 Compatible]
-#include "ies/StdUtil/RequireCpp11.hpp"
+#include "ies/StdUtil/RequireCpp11.hpp" // IWYU pragma: keep
 
 //'' disable Warning C4127 conditional expression is constant.
 //'' Because this is designed to be C++11 compatible, cannot use C++17 if constexpr.

@@ -1,6 +1,6 @@
 #pragma once
 //! [C++11 Compatible]
-#include "ies/StdUtil/RequireCpp11.hpp"
+#include "ies/StdUtil/RequireCpp11.hpp" // IWYU pragma: keep
 
 #include <stdexcept>
 #include <string>
@@ -98,7 +98,7 @@ private:
     const std::vector<std::string> &
     ToStringVector()
     {
-        static std::vector<std::string> stringVector{ ToVector(SmartEnumT::GetEnumString()) };
+        static const std::vector<std::string> stringVector{ToVector(SmartEnumT::GetEnumString())};
         return stringVector;
     }
 };
@@ -122,13 +122,13 @@ private:
     { \
     public: \
         using Type = EnumName; \
-        static const std::string & GetName() { static std::string name{#EnumName}; return name; } \
+        static const std::string & GetName() { static const std::string name{#EnumName}; return name; } \
         static \
         const std::string & \
         GetEnumString() \
         { \
-            static std::string result{#__VA_ARGS__}; \
-            return result; \
+            static const std::string enumStr{#__VA_ARGS__}; \
+            return enumStr; \
         } \
     }; \
     inline std::size_t ToIndex(EnumName enumerator) { return static_cast<std::size_t>(enumerator); } \
