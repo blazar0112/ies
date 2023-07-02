@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # C4251: 'type' : class 'type1' needs to have dll-interface to be used by clients of class 'type2'
 #   workaround for windows dll problem currently.
 set(COMMON_MSVC_FLAGS "/permissive-;/W4;/WX;/Zi;/Zc:__cplusplus;/Zc:preprocessor;/wd5105;/utf-8")
-set(COMMON_GCC_FLAGS "-pedantic;-Wall;-Wextra;-Werror;-g;-fPIC")
+set(COMMON_GCC_FLAGS "-Wall;-Wextra;-Werror;-Wshadow;-Wconversion;-Wsign-conversion;-Wpedantic;-g;-fPIC")
 
 if (MSVC)
     set(COMMON_FLAGS ${COMMON_MSVC_FLAGS})

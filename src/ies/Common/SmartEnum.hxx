@@ -90,7 +90,7 @@ public:
     std::string
     ToString(EnumT enumerator)
     {
-        return ToStringVector().at(static_cast<int>(enumerator));
+        return ToStringVector().at(static_cast<std::size_t>(enumerator));
     }
 
 private:

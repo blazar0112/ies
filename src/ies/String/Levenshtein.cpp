@@ -58,7 +58,7 @@ DamerauLevenshtein(const std::string &str1, const std::string &str2)
         return {distance, 1.0};
     }
 
-    auto normalize = static_cast<double>(maxSize-distance)/maxSize;
+    auto normalize = static_cast<double>(maxSize-distance)/static_cast<double>(maxSize);
 
     return {distance, normalize};
 }

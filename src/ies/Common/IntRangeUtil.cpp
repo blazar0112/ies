@@ -18,7 +18,7 @@ FindOverlappingPortion(const ies::IntRange &subject, const ies::IntRange &target
     {
         throw std::runtime_error("subject cannot be empty.");
     }
-    return static_cast<double>(FindOverlappingRange(subject, target).size())/subject.size();
+    return static_cast<double>(FindOverlappingRange(subject, target).size())/static_cast<double>(subject.size());
 }
 
 }}
