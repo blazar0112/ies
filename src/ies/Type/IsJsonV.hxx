@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ies/StdUtil/RequireCpp14.hpp"
+#include "ies/StdUtil/RequireCpp14.hpp" // IWYU pragma: keep
 
 #include "ies/Type/IsJson.hxx"
 

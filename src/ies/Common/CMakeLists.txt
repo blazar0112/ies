@@ -9,8 +9,10 @@ set_property(GLOBAL PROPERTY
     PROP_SOURCES
     ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/Byte.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeBuildTime.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntRangeUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/NamedObject.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SmartEnumBuildTime.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/StringTree.cpp
 )
 
@@ -49,5 +51,6 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/PimplTestClassImpl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PimplTestClassTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SmartEnumTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/SmartEnumCpp11Test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/StringTreeTest.cpp
 )

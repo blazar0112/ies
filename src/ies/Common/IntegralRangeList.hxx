@@ -1,6 +1,6 @@
 #pragma once
 //! [C++11 Compatible]
-#include "ies/StdUtil/RequireCpp11.hpp"
+#include "ies/StdUtil/RequireCpp11.hpp" // IWYU pragma: keep
 
 #include <list>
 #include <map>
@@ -153,7 +153,7 @@ const
 
     for (; possibleBeginIt!=possibleEndIt&&possibleBeginIt!=mBeginToEndMap.end(); ++possibleBeginIt)
     {
-        IntegralRange<IntType> comparingRange{possibleBeginIt->first, possibleBeginIt->second};
+        const IntegralRange<IntType> comparingRange{possibleBeginIt->first, possibleBeginIt->second};
         if (range.Overlaps(comparingRange))
         {
             overlappingRanges.AddRange(comparingRange);
@@ -175,7 +175,8 @@ const
     {
         throw std::runtime_error("no range begins with ["+std::to_string(rangeBegin)+"].");
     }
-    IntegralRange<IntType> currentRange{rangeBegin, mBeginToEndMap.at(rangeBegin)};
+
+    const IntegralRange<IntType> currentRange{rangeBegin, mBeginToEndMap.at(rangeBegin)};
     auto currentIt = mBeginToEndMap.find(rangeBegin);
     if (currentIt!=mBeginToEndMap.begin())
     {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ies/StdUtil/RequireCpp17.hpp"
+#include "ies/StdUtil/RequireCpp17.hpp" // IWYU pragma: keep
 
 #include <iostream>
 
@@ -71,7 +71,7 @@ Format(NsCountType nsCount)
     if constexpr (!std::is_same_v<Duration, std::chrono::nanoseconds>)
     {
         using FloatingDuration = std::chrono::duration<float, typename Duration::period>;
-        std::chrono::nanoseconds ns{nsCount};
+        const std::chrono::nanoseconds ns{nsCount};
         return fmt::format("{:.3f} ", FloatingDuration(ns).count())+ToUnit<Duration, UnitName>::Unit;
     }
     else
