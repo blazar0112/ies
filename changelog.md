@@ -1,5 +1,15 @@
 # Changelog of IES
 
+- v4.2.0 [2023-12-28]:
+    - Upgrade `SmartEnum` to use C++17 and improve writing and document.
+    - As a result, `test-cpp11only` no longer works.
+    - Previous implementation is copied to `SmartEnumCpp11` as reference.
+    - Add BuildTime source to estimate header include time impact.
+        - On my PC, single thread, gcc(mingw) `-ftime-report` (no clang environment).
+        - IntregralRange: 0.46s
+        - SmartEnum: 0.27s
+        - Find: 0.47s
+
 - v4.1.0 [2023-03-29]:
     - Fix IWYU and clang tidy warning in headers.
     
