@@ -11,6 +11,7 @@ namespace MyTest
 
 IES_SMART_ENUM(MyEnum, A, B, C);
 IES_SMART_ENUM(AssignValueEnum, A, B=2, C);
+IES_SMART_ENUM(Name, NameA, NameB, NameC);
 
 namespace a
 {
@@ -64,8 +65,10 @@ TEST(SmartEnum, CompileTimeConst)
 
 TEST(SmartEnum, Has)
 {
-    EXPECT_TRUE(MyEnumSmartEnum::Has("C"));
-    ASSERT_FALSE(MyEnumSmartEnum::Has("D"));
+    EXPECT_TRUE(NameSmartEnum::Has("NameC"));
+    EXPECT_FALSE(NameSmartEnum::Has("Name"));
+    EXPECT_FALSE(NameSmartEnum::Has(", "));
+    ASSERT_FALSE(NameSmartEnum::Has("NameD"));
 }
 
 TEST(SmartEnum, ToIndex)

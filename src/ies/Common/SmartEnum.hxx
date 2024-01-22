@@ -93,7 +93,11 @@ public:
     bool
     Has(const std::string& enumeratorStr)
     {
-        return SmartEnumT::GetEnumDefString().find(enumeratorStr)!=std::string::npos;
+        for (auto& enumStr : ToStringVector())
+        {
+            if (enumeratorStr==enumStr) { return true; }
+        }
+        return false;
     }
 
     //! @note Use free function ToString(EnumName), don't use this directly, it's for SmartEnum implementation.
