@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v4.2.1 [2024-01-23]:
+    - Fix `SmartEnum::Has` bug.
+
 - v4.2.0 [2023-12-28]:
     - Upgrade `SmartEnum` to use C++17 and improve writing and document.
     - As a result, `test-cpp11only` no longer works.
