@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v4.3.0 [2024-06-10]:
+    - Add `RequireCpp[20|23].hpp` in `StdUtil`.
+
 - v4.2.1 [2024-01-23]:
     - Fix `SmartEnum::Has` bug.
 
