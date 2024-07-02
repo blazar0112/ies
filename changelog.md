@@ -1,5 +1,9 @@
 # Changelog of IES
 
+- v4.4.0 [2024-07-03]:
+    - Add `[[nodiscard]]` to functions declared in `SmartEnum` in `Common`.
+    - Add `[[nodiscard]]` to `Find` in `StdUtil`.
+
 - v4.3.0 [2024-06-10]:
     - Add `RequireCpp[20|23].hpp` in `StdUtil`.
 

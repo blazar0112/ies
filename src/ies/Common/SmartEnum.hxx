@@ -39,6 +39,7 @@ namespace ies::Enum::Detail
 
 //! @brief Split <enumDefString> in enum class EnumName {<enumDefString>} to vector of enumeratorStr.
 //! @note Same definition for all EnumName declared by IES_SMART_ENUM so as inline function.
+[[nodiscard]]
 inline
 std::vector<std::string>
 ToVector(const std::string& enumDefString)
@@ -61,17 +62,18 @@ public:
     static_assert(std::is_same_v<int, UnderlyingType>);
 
     //! @brief Get min valid value in underlying type int.
-    static constexpr int Min() { return 0; }
+    [[nodiscard]] static constexpr int Min() { return 0; }
     //! @brief Get max valid value in underlying type int.
-    static constexpr int Max() { return SizeC-1; }
+    [[nodiscard]] static constexpr int Max() { return SizeC-1; }
     //! @brief Get min valid enumerator.
-    static constexpr EnumT MinEnum() { return static_cast<EnumT>(Min()); }
+    [[nodiscard]] static constexpr EnumT MinEnum() { return static_cast<EnumT>(Min()); }
     //! @brief Get max valid enumerator.
-    static constexpr EnumT MaxEnum() { return static_cast<EnumT>(Max()); }
+    [[nodiscard]] static constexpr EnumT MaxEnum() { return static_cast<EnumT>(Max()); }
     //! @brief Get compile-time constant size.
-    static constexpr std::size_t Size() { return SizeC; }
+    [[nodiscard]] static constexpr std::size_t Size() { return SizeC; }
 
     //! @brief Return all enumerators in vector of enumerator to use in range-based for.
+    [[nodiscard]]
     static
     const std::vector<EnumT>&
     ToRange()
@@ -89,10 +91,12 @@ public:
     }
 
     //! @brief Check if enum has string <enumeratorStr> before using ToEnumName(), which throws if not exist.
+    [[nodiscard]]
     static
     bool
     Has(const std::string& enumeratorStr)
     {
+        // NOLINTNEXTLINE(readability-use-anyofallof)
         for (auto& enumStr : ToStringVector())
         {
             if (enumeratorStr==enumStr) { return true; }
@@ -101,6 +105,7 @@ public:
     }
 
     //! @note Use free function ToString(EnumName), don't use this directly, it's for SmartEnum implementation.
+    [[nodiscard]]
     static
     const std::string&
     ToString(EnumT enumerator)
@@ -115,6 +120,7 @@ public:
     }
 
     //! @brief Get vector of enumeratorStr.
+    [[nodiscard]]
     static
     const std::vector<std::string>&
     ToStringVector()
@@ -172,17 +178,17 @@ public:
     public: \
         using Type = EnumName; \
         /* @brief Get enum class "EnumName" as string. */ \
-        static const std::string& GetName() { static const std::string name{#EnumName}; return name; } \
+        [[nodiscard]] static const std::string& GetName() { static const std::string name{#EnumName}; return name; } \
         /* @brief Get enum class EnumName{"EnumDef"} as string. */ \
-        static const std::string& GetEnumDefString() { static const std::string enumDefString{#__VA_ARGS__}; return enumDefString; } \
+        [[nodiscard]] static const std::string& GetEnumDefString() { static const std::string enumDefString{#__VA_ARGS__}; return enumDefString; } \
     }; \
     /* @brief Convert enumerator to std::size_t, usually use as index for array/vector. */ \
-    [[maybe_unused]] inline constexpr std::size_t ToIndex(EnumName enumerator) { return static_cast<std::size_t>(enumerator); } \
+    [[maybe_unused, nodiscard]] inline constexpr std::size_t ToIndex(EnumName enumerator) { return static_cast<std::size_t>(enumerator); } \
     /* @brief Convert enumerator to std::string. Empty if enumerator is out of bound. */ \
-    [[maybe_unused]] inline const std::string& ToString(EnumName enumerator) { return SmartEnum<EnumName>::ToString(enumerator); } \
+    [[maybe_unused, nodiscard]] inline const std::string& ToString(EnumName enumerator) { return SmartEnum<EnumName>::ToString(enumerator); } \
     /* @brief Convert std::string to enumerator of EnumName, throws if <enumeratorStr> not match any enumerator. */ \
     /* @note Use SmartEnum::Has(enumeratorStr) to check before use if don't want to throw exception. */ \
-    [[maybe_unused]] inline EnumName To##EnumName(const std::string& enumeratorStr) \
+    [[maybe_unused, nodiscard]] inline EnumName To##EnumName(const std::string& enumeratorStr) \
     { \
         for (auto e : SmartEnum<EnumName>::ToRange()) \
         { \

@@ -3,6 +3,7 @@
 #include "gtest/gtest.h"
 
 #include <array>
+#include <vector>
 
 // NOLINTBEGIN(cert-err58-cpp,cppcoreguidelines-owning-memory)
 // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
@@ -40,7 +41,8 @@ TEST(SmartEnum, AssignValue)
     //'' if enum is not begin with 0 and increase by 1 for each enumerator.
     ASSERT_THROW(
         {
-            AssignValueEnumSmartEnum::ToString(AssignValueEnum::B);
+            auto& s = AssignValueEnumSmartEnum::ToString(AssignValueEnum::B);
+            (void)s;
         },
         std::runtime_error
     );
