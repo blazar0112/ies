@@ -2,6 +2,8 @@
 
 #include "ies/StdUtil/RequireCpp17.hpp" // IWYU pragma: keep
 
+#include <cstddef>
+
 #include <algorithm>
 #include <optional>
 #include <string>
@@ -48,8 +50,9 @@ template <typename Container,
           typename Value,
           std::enable_if_t<!std::is_same_v<std::remove_cv_t<Container>, std::string>
                            &&!std::is_same_v<std::remove_cv_t<Container>, std::string_view>, int> = 0>
+[[nodiscard]]
 auto
-Find(Container &container, const Value &value)
+Find(Container& container, const Value& value)
 -> std::optional<decltype(std::begin(container))>
 {
     if constexpr (Type::IsJsonV<Container>)
@@ -100,8 +103,9 @@ template <typename Container,
           typename Value,
           std::enable_if_t<!std::is_same_v<std::remove_cv_t<Container>, std::string>
                            &&!std::is_same_v<std::remove_cv_t<Container>, std::string_view>, int> = 0>
+[[nodiscard]]
 auto
-Find(const Container &container, const Value &value)
+Find(const Container& container, const Value& value)
 -> std::optional<decltype(std::begin(container))>
 {
     if constexpr (Type::IsJsonV<Container>)
@@ -147,9 +151,10 @@ Find(const Container &container, const Value &value)
 
 //! @brief [String] Simplify usage of std::string::find(substr) [O(n)], return std::optional of std:size_t (pos).
 //! @note If substr is empty, always return pos=0.
+[[nodiscard]]
 inline
 std::optional<std::size_t>
-Find(const std::string &s, const std::string &substr)
+Find(const std::string& s, const std::string& substr)
 {
     if (auto pos = s.find(substr); pos!=std::string::npos)
     {
@@ -160,9 +165,10 @@ Find(const std::string &s, const std::string &substr)
 
 //! @brief [String] Simplify usage of std::string::find(char) [O(n)], return std::optional of std:size_t (pos).
 //! @note Need this specialization to support search '\0' without much trouble.
+[[nodiscard]]
 inline
 std::optional<std::size_t>
-Find(const std::string &s, char c)
+Find(const std::string& s, char c)
 {
     if (auto pos = s.find(c); pos!=std::string::npos)
     {
@@ -173,6 +179,7 @@ Find(const std::string &s, char c)
 
 //! @brief [StringView] Simplify usage of std::string_view::find(substr) [O(n)], return std::optional of std:size_t (pos).
 //! @note If substr is empty, always return pos=0.
+[[nodiscard]]
 inline
 std::optional<std::size_t>
 Find(std::string_view s, std::string_view substr)
@@ -186,6 +193,7 @@ Find(std::string_view s, std::string_view substr)
 
 //! @brief [StringView] Simplify usage of std::string_view::find(char) [O(n)], return std::optional of std:size_t (pos).
 //! @note Need this specialization to support search '\0' without much trouble.
+[[nodiscard]]
 inline
 std::optional<std::size_t>
 Find(std::string_view s, char c)
@@ -197,4 +205,4 @@ Find(std::string_view s, char c)
     return std::nullopt;
 }
 
-}
+} // namespace ies
