@@ -25,6 +25,7 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/Byte.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Endian.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/Extremum.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FastIntegerPow.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRange.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeList.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeUsing.hpp
@@ -44,6 +45,7 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/AdjacentVectorRangeTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ByteTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EndianTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FastIntegerPowTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeListTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntRangeUtilTest.cpp

@@ -51,7 +51,7 @@ target_include_directories(ies PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_BINARY_DIR}/exports>"
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-set_target_properties(ies PROPERTIES CXX_STANDARD 17)
+set_target_properties(ies PROPERTIES CXX_STANDARD 20)
 if (MSVC)
     target_compile_options(ies PRIVATE ${COMMON_MSVC_FLAGS}
         /Dies_EXPORTS
@@ -91,7 +91,7 @@ if (GTest_FOUND)
     enable_testing()
 
     add_executable(test-all app/test-all.cpp ${TEST_SOURCES})
-    set_target_properties(test-all PROPERTIES CXX_STANDARD 17)
+    set_target_properties(test-all PROPERTIES CXX_STANDARD 20)
     target_compile_options(test-all PUBLIC ${COMMON_FLAGS})
     target_link_libraries(test-all PRIVATE GTest::gtest ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
 

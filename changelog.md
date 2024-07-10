@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v5.0.0 [2024-07-11]:
+    - Add `FastIntegerPow` and start using C++20.
+
 - v4.4.0 [2024-07-03]:
     - Add `[[nodiscard]]` to functions declared in `SmartEnum` in `Common`.
     - Add `[[nodiscard]]` to `Find` in `StdUtil`.
