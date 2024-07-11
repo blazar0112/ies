@@ -1,5 +1,10 @@
 # Changelog of IES
 
+- v5.1.0 [2024-07-12]:
+    - Rename `FastIntegerPow*` filename to `IntegerPow*`.
+    - Rename function `FastIntegerPow()` to `LookupIntegerPow()`.
+    - Fix `IntegerPow` implementation and add more tests.
+
 - v5.0.0 [2024-07-11]:
     - Add `FastIntegerPow` and start using C++20.
 
