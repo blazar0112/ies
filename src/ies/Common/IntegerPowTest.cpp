@@ -85,6 +85,17 @@ TEST(IntegerPow, CalculateIntegerPowBoundaryCase)
     EXPECT_EQ(10000ULL, result100p2);
 }
 
+/*
+TEST(IntegerPow, LargeN)
+{
+    constexpr auto result4p16add1 = CalculateIntegerPow<4, 16>()+1;
+    auto result4p16add1p2 = LookupIntegerPow<result4p16add1, 3>(2); // In 5.1.0 this does not error.
+    EXPECT_EQ(0ULL, result4p16add1p2);
+    auto result4p16add1p1 = LookupIntegerPow<result4p16add1, 3>(1);
+    ASSERT_EQ(std::numeric_limits<uint32_t>::max(), result4p16add1p1-2);
+}
+*/
+
 TEST(IntegerPow, LookupIntegerPow)
 {
     auto result3p4 = LookupIntegerPow<3, 5>(4);
@@ -97,11 +108,11 @@ TEST(IntegerPow, LookupIntegerPow)
 
 TEST(IntegerPow, IntegerPow10)
 {
+    // note: 2^64 = 1.8*10^19.
     auto GetPowOf10 = [](std::size_t exp) -> auto
     {
-        // LookupIntegerPow<10, 20> calculate 10^19, while max uint64_t is 1.8*10.^19
-        // current bit check fail for this.
-        return LookupIntegerPow<10, 19>(exp);
+        //auto result10p21 = CalculateIntegerPow<10, 21>(); // error
+        return LookupIntegerPow<10, 20>(exp);
     };
     EXPECT_EQ(1ULL, GetPowOf10(0));
     EXPECT_EQ(10ULL, GetPowOf10(1));
@@ -122,7 +133,8 @@ TEST(IntegerPow, IntegerPow10)
     EXPECT_EQ(10'000'000'000'000'000ULL, GetPowOf10(16));
     EXPECT_EQ(100'000'000'000'000'000ULL, GetPowOf10(17));
     EXPECT_EQ(1'000'000'000'000'000'000ULL, GetPowOf10(18));
-    ASSERT_EQ(0ULL, GetPowOf10(19));
+    EXPECT_EQ(10'000'000'000'000'000'000ULL, GetPowOf10(19));
+    ASSERT_EQ(0ULL, GetPowOf10(20));
 }
 
 TEST(IntegerPow, LookupIntegerPowOutOfTableRange)

@@ -36,7 +36,6 @@ CalculateIntegerPow()
 }
 
 //! @brief Calculate N^Exp in compile time. Check if N^Exp is possible to overflow uint64_t by bits.
-//! @note The bit estimate check is not perfect when N>2 and may have false positive, like 10^19.
 template <uint64_t N, uint64_t Exp>
 requires (N!=0&&N!=1)
 [[nodiscard]]
@@ -44,7 +43,15 @@ consteval uint64_t
 CalculateIntegerPow()
 {
     constexpr int MaxBitCount = 8*sizeof(uint64_t);
+
+    //! @brief Check total bits when n2Bits > CheckN2BitCount.
+    //! @note If check N^2 bits too early, it can be false positive, like 10^19.
+    //! N=10, Exp=19, nBits = 4, n2Bits = 7, totalBits = 4+7*9.
+    //! Workaround: when n2Bits is small enough, go in one level and don't check at this level.
+    constexpr int CheckN2BitCount = 8;
+    constexpr int nBits = std::bit_width(N-1);
     constexpr int n2Bits = std::bit_width(N*N-1);
+
     if constexpr (Exp==0)
     {
         return 1ULL;
@@ -60,15 +67,22 @@ CalculateIntegerPow()
     }
     else if constexpr (Exp%2==1)
     {
-        constexpr int nBits = std::bit_width(N-1);
         constexpr int totalBits = nBits+n2Bits*(Exp-1)/2;
-        static_assert(totalBits<MaxBitCount, "N^MaxExp bit estimate check: may > size of uint64.");
+        if constexpr (n2Bits>CheckN2BitCount)
+        {
+            static_assert(nBits<(MaxBitCount/2), "N^MaxExp bit estimate check: may > size of uint64.");
+            static_assert(totalBits<MaxBitCount, "N^MaxExp bit estimate check: may > size of uint64.");
+        }
         return N*CalculateIntegerPow<N*N, (Exp-1)/2>();
     }
     else
     {
         constexpr int totalBits = n2Bits*Exp/2;
-        static_assert(totalBits<MaxBitCount, "N^MaxExp bit estimate check: may > size of uint64.");
+        if constexpr (n2Bits>CheckN2BitCount)
+        {
+            static_assert(nBits<(MaxBitCount/2), "N^MaxExp bit estimate check: may > size of uint64.");
+            static_assert(totalBits<MaxBitCount, "N^MaxExp bit estimate check: may > size of uint64.");
+        }
         return CalculateIntegerPow<N*N, Exp/2>();
     }
 };

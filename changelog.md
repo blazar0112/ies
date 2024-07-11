@@ -1,5 +1,9 @@
 # Changelog of IES
 
+- v5.1.1 [2024-07-12]:
+    - Fix `IntegerPow` large N when N>2^32 issue.
+    - Fix `IntegerPow` 10^19 issue.
+
 - v5.1.0 [2024-07-12]:
     - Rename `FastIntegerPow*` filename to `IntegerPow*`.
     - Rename function `FastIntegerPow()` to `LookupIntegerPow()`.
