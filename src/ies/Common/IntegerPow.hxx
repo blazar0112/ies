@@ -12,32 +12,8 @@
 namespace ies
 {
 
-//! @brief [N==0 version] Calculate N^Exp in compile time.
-//! @note Not in general version because use static_assert there.
-template <uint64_t N, uint64_t Exp>
-requires (N==0)
-[[nodiscard]]
-consteval uint64_t
-CalculateIntegerPow()
-{
-    if constexpr (Exp==0) { return 1ULL; }
-    else { return 0ULL; }
-}
-
-//! @brief [N==1 version] Calculate N^Exp in compile time.
-//! @note Not in general version because use static_assert there.
-template <uint64_t N, uint64_t Exp>
-requires (N==1)
-[[nodiscard]]
-consteval uint64_t
-CalculateIntegerPow()
-{
-    return 1ULL;
-}
-
 //! @brief Calculate N^Exp in compile time. Check if N^Exp is possible to overflow uint64_t by bits.
 template <uint64_t N, uint64_t Exp>
-requires (N!=0&&N!=1)
 [[nodiscard]]
 consteval uint64_t
 CalculateIntegerPow()
@@ -49,10 +25,19 @@ CalculateIntegerPow()
     //! N=10, Exp=19, nBits = 4, n2Bits = 7, totalBits = 4+7*9.
     //! Workaround: when n2Bits is small enough, go in one level and don't check at this level.
     constexpr int CheckN2BitCount = 8;
+
     constexpr int nBits = std::bit_width(N-1);
     constexpr int n2Bits = std::bit_width(N*N-1);
 
-    if constexpr (Exp==0)
+    if constexpr (N==0&&Exp==0)
+    {
+        return 1ULL;
+    }
+    else if constexpr (N==0)
+    {
+        return 0ULL;
+    }
+    else if constexpr (N==1||Exp==0)
     {
         return 1ULL;
     }

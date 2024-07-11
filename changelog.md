@@ -1,5 +1,8 @@
 # Changelog of IES
 
+- v5.1.2 [2024-07-12]:
+    - Refactor `CalculateIntegerPow` and remove extra requires version.
+
 - v5.1.1 [2024-07-12]:
     - Fix `IntegerPow` large N when N>2^32 issue.
     - Fix `IntegerPow` 10^19 issue.

@@ -50,7 +50,7 @@ TEST(IntegerPow, CalculateIntegerPowBoundaryCase)
         EXPECT_EQ(std::numeric_limits<uint16_t>::max(), result2p16-1);
         auto result2p32 = CalculateIntegerPow<2, 32>();
         EXPECT_EQ(std::numeric_limits<uint32_t>::max(), result2p32-1);
-        // auto result2p64 = CalculateIntegerPow<2, 64>(); // error
+        //auto result2p64 = CalculateIntegerPow<2, 64>(); // error
         auto result2p63 = CalculateIntegerPow<2, 63>();
         EXPECT_EQ(std::numeric_limits<uint64_t>::max(), (result2p63-1)*2+1);
         EXPECT_EQ(9'223'372'036'854'775'808ULL, result2p63);
