@@ -8,10 +8,10 @@
 //! @brief TimeUtil: convenient functions for common chrono usage.
 //! @note Format and Print move to TimeUtilFormat to let user without fmt can use TimeUtil.
 //! @code Example usage:
-//!     auto begin = s2Time::Now();
+//!     auto begin = ies::Time::Now();
 //!     DoSomething();
-//!     s2Time::PrintNs(begin);
-//!     s2Time::PrintNs(begin, s2Time::Now(), "DoSomething");
+//!     ies::Time::PrintNs(begin);
+//!     ies::Time::PrintNs(begin, ies::Time::Now(), "DoSomething");
 // NOLINTNEXTLINE(modernize-concat-nested-namespaces)
 namespace ies { namespace Time {
 

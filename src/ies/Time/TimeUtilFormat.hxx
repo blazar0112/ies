@@ -10,10 +10,10 @@
 
 //! @brief TimeUtil: convenient functions for common chrono usage.
 //! @code Example usage:
-//!     auto begin = s2Time::Now();
+//!     auto begin = ies::Time::Now();
 //!     DoSomething();
-//!     s2Time::PrintNs(begin);
-//!     s2Time::PrintNs(begin, s2Time::Now(), "DoSomething");
+//!     ies::Time::PrintNs(begin);
+//!     ies::Time::PrintNs(begin, ies::Time::Now(), "DoSomething");
 namespace ies::Time {
 
 enum class UnitNameType

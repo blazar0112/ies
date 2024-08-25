@@ -9,6 +9,7 @@ set_property(GLOBAL PROPERTY
     PROP_SOURCES
     ${SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/Byte.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/IntegerPowBuildTime.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeBuildTime.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntRangeUtil.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/NamedObject.cpp
@@ -25,6 +26,7 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/Byte.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Endian.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/Extremum.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/IntegerPow.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRange.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeList.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeUsing.hpp
@@ -34,6 +36,7 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/RangeSide.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SmartEnum.hxx
     ${CMAKE_CURRENT_SOURCE_DIR}/StringTree.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/VariadicSize.hpp
 )
 
 get_property(TEST_SOURCES GLOBAL PROPERTY PROP_TEST_SOURCES)
@@ -44,6 +47,7 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/AdjacentVectorRangeTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ByteTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EndianTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/IntegerPowTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntegralRangeListTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/IntRangeUtilTest.cpp
@@ -51,6 +55,5 @@ set_property(GLOBAL PROPERTY
     ${CMAKE_CURRENT_SOURCE_DIR}/PimplTestClassImpl.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/PimplTestClassTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/SmartEnumTest.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/SmartEnumCpp11Test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/StringTreeTest.cpp
 )

@@ -4,14 +4,236 @@
 - Common Library for general C++ development facility.
 - [IES License](license/IES-LICENSE.txt)
 
-# Table of Contents
+## Use Guide
 
-- [IES C++ Common Library](#ies-c-common-library)
-- [Table of Contents](#table-of-contents)
-    - [Dependency](#dependency)
-        - [Install Dependency](#install-dependency)
-    - [MINGW](#mingw)
-    - [Build](#build)
+- Only summarize most useful items, not listing every item in library here.
+- Target for light-weighted and not using any `boost`.
+- Note on extension:
+    - `.hpp`: C++ header with mainly declarations.
+    - `.hxx`: C++ template or heavily inlined header.
+
+### SmartEnum
+- `#include "ies/Common/SmartEnum.hxx"`.
+- Help building abstraction, providing string reflection of enumerator and enabling enum iteration.
+- Example:
+
+    ```cpp
+    #include "ies/Common/SmartEnum.hxx"
+
+    // ToString() reflects exactly as enumerator's name.
+    // Declare enumerator to fit purpose that requires ToString().
+    // For example, if log requires lower-cased build type names.
+    IES_SMART_ENUM(BuildType, release, debug);
+    // No longer can have typo. Prefer auto completed code.
+    // Print "Log - BuildType[debug]".
+    fmt::println(
+        "Log - {}[{}]",
+        BuildTypeSmartEnum::GetName(),
+        ToString(BuildType::debug));
+
+    // Declare enum class MyEnv and auxiliary class MyEnvSmartEnum.
+    // Declare in namespace this macro is used.
+    IES_SMART_ENUM(MyEnv,
+        ENV_A,
+        ENV_B,
+        ENV_C
+    );
+
+    // MyEnvSmartEnum::Size() is constexpr and can use for size of std::array.
+    // Model enumerator value 1-1 mapping to array index.
+    std::array<std::optional<std::string>, MyEnvSmartEnum::Size()> EnvValues;
+
+    void InitEnv()
+    {
+        // Iterating enum easily using SmartEnum::ToRange().
+        for (auto env : MyEnvSmartEnum::ToRange())
+        {
+            // ToString() returns const std::string&.
+            // No longer can have typo when using getenv().
+            if (auto* value = std::getenv(ToString(env).c_str()))
+            {
+                // Model enumerator value 1-1 mapping to array index.
+                // ToIndex() returns std::size_t.
+                EnvValues[ToIndex(env)] = value;
+            }
+        }
+    }
+    ```
+
+### Find
+- `#include "ies/StdUtil/Find.hxx"`.
+- Usage: `auto resultOption = Find(container, element);`.
+    - Returns `std::optional` of original `.find()` or `std::find()` return.
+- Reduce boilerplate code comparing `find()` to `end()` or `std::string::npos`.
+    - It's also non-intuitive because double negation `!=end()`.
+- Same interface for all STL container, `std::string` and nlohmann json.
+    - However, beware that for non-associative container it uses `O(n)` `std::find()`.
+- Example:
+
+    ```cpp
+    #include "ies/StdUtil/Find.hxx"
+
+    std::set<int> set{1, 2};
+    std::map<int, std::string> map{{1, "a"}, {2, "b"}};
+    std::vector<int> vector{1, 2};
+    std::string str{"hello world!"};
+    nlohmann::json json{{"one", 1}, {"two", 2}};
+    // Without ies::Find
+    if (auto it = set.find(1); it!=set.end())
+    {
+        fmt::println("has key {}.", *it);
+    }
+    if (auto it = map.find(1); it!=map.end())
+    {
+        fmt::println("has key {} and value is {}.", it->first, it->second);
+    }
+    if (auto it = std::find(vector.begin(), vector.end(), 1); it!=vector.end())
+    {
+        fmt::println("has element {}.", *it);
+    }
+    if (auto pos = str.find("world"); pos!=std::string::npos)
+    {
+        fmt::println("has substring 'world' at pos {}", pos);
+    }
+    if (auto it = json.find("one"); it!=json.end())
+    {
+        fmt::println("has key {} and value is {}.", it.key(), it.value());
+    }
+    // Using ies::Find
+    // Not repeating container name and no longer has double negation.
+    if (auto found = ies::Find(set, 1))
+    {
+        fmt::println("has key {}.", *found.value());
+    }
+    if (auto found = ies::Find(map, 1))
+    {
+        fmt::println("has key {} and value is {}.", found.value()->first, found.value()->second);
+    }
+    if (auto found = ies::Find(vector, 1))
+    {
+        fmt::println("has element {}.", *found.value());
+    }
+    if (auto found = ies::Find(str, "world"))
+    {
+        fmt::println("has substring 'world' at pos {}", found.value());
+    }
+    if (auto found = ies::Find(json, "one"))
+    {
+        fmt::println("has key {} and value is {}.", found.value().key(), found.value().value());
+    }
+    ```
+
+### SplitString[View]
+- `#include "ies/String/SplitString[View].hpp"`.
+- Usage: `auto tokens = ies::SplitString(separator, input)`.
+- SplitString: split `std::string` into `std::vector<std::string>`.
+- SplitStringView: split `std::string_view` into `std::vector<std::string_view>`.
+- Separator: split to any one of characters in `separator` string.
+- Example:
+
+    ```cpp
+    #include "ies/String/SplitString[View].hpp"
+
+    std::string input{"(x,y), ,(a b)"};
+    std::string separator{"() ,"};
+
+    // tokens = {"x", "y", "a", "b"}
+    auto tokens = ies::SplitString(separator, input);
+    // equivalent boost
+    #include <boost/algorithm/string.hpp>
+    std::vector<std::string> tokens;
+    auto trimmedInput = input;
+    boost::trim_if(trimmedInput, boost::is_any_of(separator));
+    boost::split(tokens, trimmedInput, boost::is_any_of(separator), boost::token_compress_on);
+
+    // Preserving empty values from multiple adjacent separators.
+    // Useful for CSV format, for example.
+    std::string csvRow{",,b,,,e,,"};
+    constexpr std::size_t CsvColumnCount = 8;
+    // tokens = {"", "", "b", "", "", "e", "", ""}
+    auto tokens = ies::SplitStringPreserve(",", csvRow, CsvColumnCount);
+    // equivalent boost
+    #include <boost/algorithm/string.hpp>
+    std::vector<std::string> tokens;
+    boost::split(tokens, csvRow, boost::is_any_of(","));
+    ```
+
+### IntegralRange (IntRange, IndexRange)
+- `#include "ies/Common/IntegralRange.hxx"` for arbitrary integral type `ies::IntegralRange<T>`.
+- `#include "ies/Common/IntegralRangeUsing.hpp"` for common `IntRange`, `IndexRange` in global namespace and ease of using.
+    - `IntRange`: alias for `IntegralRange<int>`.
+    - `IndexRange`: alias for `IntegralRange<std::size_t>`.
+- IntegralRange models non-empty range `[begin, end)`.
+    - Can opt to be empty by specifying `ies::EmptyPolicy::Allow`.
+- Python-like range usage to iterate integral value in range-based for loop.
+    - Cannot specify `step`, `step` is always 1.
+- Runtime constructed range, do not use in performance critical loop.
+- IntegralRange also provides utilities to compare with value point or overlap with other range.
+    - It was designed to represent 2D/3D rectilinear shape.
+- Example:
+
+    ```cpp
+    #include "ies/Common/IntegralRangeUsing.hpp"
+
+    std::array<int, 8> values;
+    // Do not use IntegralRange if loop count is constant value!
+    // Compiler can do vectorization, just use raw for loop.
+    for (std::size_t i = 0; i<8; ++i)
+    {
+        DoSomething(value[i]);
+    }
+
+    std::vector<int> v1;
+    std::vector<int> v2; // assume same size as v2
+    v1.resize(100);
+    v2.resize(100);
+    // Iterating v1 and v2 at same time using index.
+    for (std::size_t i = 0; i<v1.size(); ++i)
+    {
+        DoSomething(v1[i]-v2[v1.size()-i]);
+    }
+
+    // If raw loop count is dynamic, performance is close besides the constructing cost.
+    for (auto i : IndexRange{0, v1.size()})
+    {
+        DoSomething(v1[i]-v2[v1.size()-i]);
+    }
+    // Default assume non-empty range and throws if empty.
+    // Use ies::EmptyPolicy::Allow if range is possibly empty.
+    for (auto i : IndexRange{0, v1.size(), ies::EmptyPolicy::Allow})
+    {
+        DoSomething(v1[i]-v2[v1.size()-i]);
+    }
+
+    // Alternative: boost::irange.
+    // However, compilation cost including irange is higher.
+    #include <boost/range/irange.hpp>
+    for (auto i : boost::irange<std::size_t>(0, v1.size.size()))
+    {
+        DoSomething(v1[i]-v2[v1.size()-i]);
+    }
+
+    // Alternative: C++20, IntegralRange was invented before C++17.
+    #include <ranges>
+    for (auto i : std::ranges::iota_view{0u, v1.size.size()})
+    {
+        DoSomething(v1[i]-v2[v1.size()-i]);
+    }
+
+    // Example of provided utilities:
+    struct Rect
+    {
+        IntRange XRange;
+        IntRange YRange;
+    };
+
+    Rect r1{{0, 3}, {0, 3}};
+    Rect r2{{1, 4}, {1, 4}};
+    if (r1.XRange.Overlaps(r2.XRange)&&r1.YRange.Overlaps(r2.YRange))
+    {
+        fmt::println("r1 and r2 overlaps.");
+    }
+    ```
 
 ## Dependency
 

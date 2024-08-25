@@ -18,17 +18,12 @@ namespace ies
 //'' Requires C++17 since using std::optional.
 
 //'' Usage note and design rationale:
-//'' [C++98/11] directly use STL interface, much boilerplate
+//'' [C++98/11] directly use STL interface, much boilerplate.
 //''    auto find = map.find(key);
 //''    if (find!=map.end()) { //found and can use find iterator } else { //not found }
-//'' [C++11] Use StdUtil::IsIn to express key existence check. But IsIn is a predicate, to use iterator actually need find twice.
-//'' also does not preserve constness since it only return bool, does not care. And interface order not same as std::find
-//''    if (StdUtil::IsIn(key, map)) { // guranteed has key, just use .at(): auto &value = map.at(key) }
-//'' note: order of argument is changed in ies version.
-//''    if (ies::IsIn(map, key)) { // guranteed has key, just use .at(): auto &value = map.at(key) }
 //'' [C++17] Use ies::Find(), look Test for more usages. iterator/const_iterator to use iterator and preserve constness.
-//''    if (auto opt = ies::Find(map, key)) { // can choose to use opt.value(), type depend on what container is }
-//'' note: C++17 can declare variable in if statementenables you to write
+//''    if (auto opt = ies::Find(map, key)) { // can choose to use opt.value(), type depends on what container is }
+//'' note: C++17 can declare variable in if statement enables you to write
 //''    if (auto it=map.find(key); it!=map.end())
 //'' but that's still boilerplate, and ies::Find unify usage between std::string and containers.
 //'' [C++20] has std::set::contains(key)->bool. but still not solve may or may not use result iterator of find problem.
@@ -74,9 +69,7 @@ Find(Container& container, const Value& value)
             }
         }
     }
-
-    // NOLINTNEXTLINE(readability-misleading-indentation)
-    if constexpr (Type::IsAssociativeContainerV<Container>)
+    else if constexpr (Type::IsAssociativeContainerV<Container>)
     {
         //'' associative container, use container.find() [O(lgn)]
         if (auto it = container.find(value); it!=container.end())
@@ -127,9 +120,7 @@ Find(const Container& container, const Value& value)
             }
         }
     }
-
-    // NOLINTNEXTLINE(readability-misleading-indentation)
-    if constexpr (Type::IsAssociativeContainerV<Container>)
+    else if constexpr (Type::IsAssociativeContainerV<Container>)
     {
         //'' associative container, use container.find() [O(lgn)]
         if (auto it = container.find(value); it!=container.end())

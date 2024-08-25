@@ -51,7 +51,7 @@ target_include_directories(ies PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR};${CMAKE_BINARY_DIR}/exports>"
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-set_target_properties(ies PROPERTIES CXX_STANDARD 17)
+set_target_properties(ies PROPERTIES CXX_STANDARD 20)
 if (MSVC)
     target_compile_options(ies PRIVATE ${COMMON_MSVC_FLAGS}
         /Dies_EXPORTS
@@ -91,36 +91,24 @@ if (GTest_FOUND)
     enable_testing()
 
     add_executable(test-all app/test-all.cpp ${TEST_SOURCES})
-    set_target_properties(test-all PROPERTIES CXX_STANDARD 17)
+    set_target_properties(test-all PROPERTIES CXX_STANDARD 20)
     target_compile_options(test-all PUBLIC ${COMMON_FLAGS})
     target_link_libraries(test-all PRIVATE GTest::gtest ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
 
     add_test(test-all test-all)
 
-#    set(CPP11ONLY_TEST_SOURCES
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentArrayRangeTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/AdjacentVectorRangeTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/EndianTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/IntegralRangeTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/IntegralRangeListTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/SmartEnumCpp11Test.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/EraseIfTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/FormatStringTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/IsInTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/ReverseEqualRangeTest.cpp
-#        ${CMAKE_CURRENT_SOURCE_DIR}/ies/String/SplitStringTest.cpp
-#    )
+    set(CPP17ONLY_TEST_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/Common/SmartEnumTest.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ies/StdUtil/FindTest.cpp
+    )
 
-#    if (NOT MSVC)
-#        # Note: MSVC doesn't have /std:c++11, so only test in gcc/mingw.
-#        add_executable(test-cpp11only app/test-cpp11only.cpp ${CPP11ONLY_TEST_SOURCES})
-#        set_target_properties(test-cpp11only PROPERTIES CXX_STANDARD 11)
-#        target_include_directories(test-cpp11only PUBLIC ${FMT_INCLUDE_DIRS})
-#        target_compile_options(test-cpp11only PUBLIC ${COMMON_GCC_FLAGS})
-#        target_link_libraries(test-cpp11only PRIVATE GTest::gtest ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
-#    endif()
+    add_executable(test-cpp17only ${CPP17ONLY_TEST_SOURCES})
+    set_target_properties(test-cpp17only PROPERTIES CXX_STANDARD 17)
+    target_include_directories(test-cpp17only PUBLIC ${FMT_INCLUDE_DIRS})
+    target_compile_options(test-cpp17only PUBLIC ${COMMON_GCC_FLAGS})
+    target_link_libraries(test-cpp17only PRIVATE GTest::gtest GTest::gtest_main ies fmt::fmt-header-only nlohmann_json::nlohmann_json)
 
-#    add_test(test-cpp11only test-cpp11only)
+    add_test(test-cpp17only test-cpp17only)
 
     if (MINGW)
         add_custom_command(TARGET test-all POST_BUILD
