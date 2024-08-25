@@ -1,5 +1,35 @@
 # Changelog of IES
 
+- v6.0.0 [2024-08-25]:
+    - Add use guide to README.
+    - CMake: remove C++11 only test, add C++17 only test.
+    - SmartEnum:
+        - Move variadic size macro to `VariadicSize.hpp` and extend limit from 64 to 256.
+        - Now check trailing comma in function `ToString()` and `ToRange()`.
+            - `ToString()` may access invalid index.
+            - Trailing comma lead to incorrect `Size()` and is misleading if using `ToRange()`.
+        - Add corresponding test `Enum256` and `TrailingComma`.
+        - Remove SmartEnumCpp11.
+    - Find:
+        - Review comment and adjust some comment.
+        - Fix `if constexpr` incorrectly missing else part and combine next `if constexpr` correctly.
+    - IntegerPow:
+        - Remove redundant condition pointed out by clang tidy.
+    - TimeUtil:
+        - Fix comment still using old style `s2Time`.
+    - Buildtime: Add IntegerPowBuildTime and re-run data:
+
+        ```
+        Building CXX object src/CMakeFiles/ies.dir/ies/Common/IntegerPowBuildTime.cpp.obj
+         TOTAL                              :   0.10           16M
+        Building CXX object src/CMakeFiles/ies.dir/ies/Common/IntegralRangeBuildTime.cpp.obj
+         TOTAL                              :   0.69           94M
+        Building CXX object src/CMakeFiles/ies.dir/ies/Common/SmartEnumBuildTime.cpp.obj
+         TOTAL                              :   0.39           72M
+        Building CXX object src/CMakeFiles/ies.dir/ies/StdUtil/FindBuildTime.cpp.obj
+         TOTAL                              :   0.62           99M
+        ```
+
 - v5.1.2 [2024-07-12]:
     - Refactor `CalculateIntegerPow` and remove extra requires version.
 

@@ -13,6 +13,7 @@ namespace ies
 {
 
 //! @brief Calculate N^Exp in compile time. Check if N^Exp is possible to overflow uint64_t by bits.
+//! @note If Exp=0, return 1. (Even if N=0).
 template <uint64_t N, uint64_t Exp>
 [[nodiscard]]
 consteval uint64_t
@@ -29,17 +30,13 @@ CalculateIntegerPow()
     constexpr int nBits = std::bit_width(N-1);
     constexpr int n2Bits = std::bit_width(N*N-1);
 
-    if constexpr (N==0&&Exp==0)
+    if constexpr (Exp==0)
     {
         return 1ULL;
     }
     else if constexpr (N==0)
     {
         return 0ULL;
-    }
-    else if constexpr (N==1||Exp==0)
-    {
-        return 1ULL;
     }
     else if constexpr (Exp==1)
     {
