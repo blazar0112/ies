@@ -1,5 +1,10 @@
 # Changelog of IES
 
+- v6.1.0 [2024-09-19]:
+    - StdUtil: Add `AdditionOrderedPtrHashSet` and `AdditionOrderedPtrHashMap`.
+        - This is to workaround with `Pointer Non-determinism` issue in legacy code.
+        - This provides addition-ordered vector for iterating determinstically.
+
 - v6.0.0 [2024-08-25]:
     - Add use guide to README.
     - CMake: remove C++11 only test, add C++17 only test.
