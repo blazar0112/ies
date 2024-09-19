@@ -34,6 +34,8 @@ get_property(TEST_SOURCES GLOBAL PROPERTY PROP_TEST_SOURCES)
 set_property(GLOBAL PROPERTY
     PROP_TEST_SOURCES
     ${TEST_SOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/AdditionOrderedPtrHashMapTest.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AdditionOrderedPtrHashSetTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EnumUtilTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EraseIfTest.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/FindTest.cpp
